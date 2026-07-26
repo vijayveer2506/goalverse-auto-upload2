@@ -130,20 +130,16 @@ def upload_video(
 
 
 # Main
+# Main
 if __name__ == "__main__":
-
 
     youtube = get_youtube_service()
 
-
     video = get_next_video()
-
 
     if video:
 
-
         title = f"{CHANNEL_NAME} Football Short"
-
 
         description = f"""
 Amazing football moments by {CHANNEL_NAME}
@@ -151,29 +147,23 @@ Amazing football moments by {CHANNEL_NAME}
 {HASHTAGS}
 """
 
-
         upload_video(
-
             youtube,
-
             video,
-
             title,
-
             description
-
         )
 
-
         # Delete uploaded video after successful upload
-os.remove(video)
+        os.remove(video)
 
-print(f"Deleted uploaded video: {video}")
-
+        print(f"Deleted uploaded video: {video}")
 
         print("Upload completed successfully")
-
 
     else:
 
         print("No new videos found")
+
+
+   
