@@ -1,7 +1,12 @@
 import os
 import json
 from dotenv import load_dotenv
+with open("config.json", "r") as file:
+    config = json.load(file)
 
+CHANNEL_NAME = config["channel_name"]
+VIDEOS_PER_DAY = config["videos_per_day"]
+HASHTAGS = " ".join(config["hashtags"])
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
