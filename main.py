@@ -1,28 +1,48 @@
 import os
+import json
 from dotenv import load_dotenv
+
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+
 
 load_dotenv()
 
-API_KEY = os.getenv("YOUTUBE_API_KEY")
+SCOPES = [
+    "https://www.googleapis.com/auth/youtube.upload"
+]
 
-youtube = build(
-    "youtube",
-    "v3",
-    developerKey=API_KEY
-)
 
-def search_videos(keyword):
-    request = youtube.search().list(
-        part="snippet",
-        q=keyword,
-        maxResults=5
+def get_youtube_service():
+
+    oauth_json = os.getenv("YOUTUBE_OAUTH_JSON")
+
+    if not oauth_json:
+        raise Exception("Missing YOUTUBE_OAUTH_JSON secret")
+
+    with open("client_secret.json", "w") as f:
+        f.write(oauth_json)
+
+    flow = InstalledAppFlow.from_client_secrets_file(
+        "client_secret.json",
+        SCOPES
     )
 
-    response = request.execute()
+    credentials = flow.run_local_server(
+        port=8080
+    )
 
-    for item in response["items"]:
-        print(item["snippet"]["title"])
+    youtube = build(
+        "youtube",
+        "v3",
+        credentials=credentials
+    )
+
+    return youtube
+
 
 if __name__ == "__main__":
-    search_videos("AI automation")
+    youtube = get_youtube_service()
+    print("YouTube authentication successful")
