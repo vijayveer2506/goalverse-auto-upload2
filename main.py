@@ -1,12 +1,26 @@
 import os
 import json
 from dotenv import load_dotenv
+
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+
+
+load_dotenv()
+
+
+# Load config
 with open("config.json", "r") as file:
     config = json.load(file)
+
 
 CHANNEL_NAME = config["channel_name"]
 VIDEOS_PER_DAY = config["videos_per_day"]
 HASHTAGS = " ".join(config["hashtags"])
+
+
+# Track uploaded videos
 def load_uploaded():
     if not os.path.exists("uploaded.txt"):
         return []
@@ -18,7 +32,11 @@ def load_uploaded():
 def save_uploaded(video_name):
     with open("uploaded.txt", "a") as file:
         file.write(video_name + "\n")
-        def get_next_video():
+
+
+# Find next video
+def get_next_video():
+
     uploaded = load_uploaded()
 
     video_folder = "videos"
@@ -27,24 +45,14 @@ def save_uploaded(video_name):
         return None
 
     for file in os.listdir(video_folder):
+
         if file not in uploaded:
             return os.path.join(video_folder, file)
 
     return None
 
-    for file in os.listdir(video_folder):
-        if file not in uploaded:
-            return os.path.join(video_folder, file)
 
-    return None
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-
-
-load_dotenv()
-
+# YouTube authentication
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload"
 ]
@@ -57,17 +65,21 @@ def get_youtube_service():
     if not oauth_json:
         raise Exception("Missing YOUTUBE_OAUTH_JSON secret")
 
+
     with open("client_secret.json", "w") as f:
         f.write(oauth_json)
+
 
     flow = InstalledAppFlow.from_client_secrets_file(
         "client_secret.json",
         SCOPES
     )
 
+
     credentials = flow.run_local_server(
         port=8080
     )
+
 
     youtube = build(
         "youtube",
@@ -75,7 +87,12 @@ def get_youtube_service():
         credentials=credentials
     )
 
+
     return youtube
+
+
+
+# Upload video
 def upload_video(
     youtube,
     file_path,
@@ -84,15 +101,22 @@ def upload_video(
 ):
 
     request_body = {
+
         "snippet": {
+
             "title": title,
+
             "description": description,
+
             "categoryId": "17"
         },
+
         "status": {
+
             "privacyStatus": "public"
         }
     }
+
 
     media = MediaFileUpload(
         file_path,
@@ -100,28 +124,42 @@ def upload_video(
         resumable=True
     )
 
+
     request = youtube.videos().insert(
+
         part="snippet,status",
+
         body=request_body,
+
         media_body=media
     )
 
+
     response = request.execute()
+
 
     print(
         "Uploaded video ID:",
         response["id"]
     )
 
+
+
+# Main
 if __name__ == "__main__":
+
 
     youtube = get_youtube_service()
 
+
     video = get_next_video()
+
 
     if video:
 
+
         title = f"{CHANNEL_NAME} Football Short"
+
 
         description = f"""
 Amazing football moments by {CHANNEL_NAME}
@@ -129,18 +167,30 @@ Amazing football moments by {CHANNEL_NAME}
 {HASHTAGS}
 """
 
+
         upload_video(
+
             youtube,
+
             video,
+
             title,
+
             description
+
         )
 
+
         save_uploaded(
+
             os.path.basename(video)
+
         )
+
 
         print("Upload completed successfully")
 
+
     else:
+
         print("No new videos found")
