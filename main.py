@@ -108,5 +108,33 @@ def upload_video(
     )
 
 if __name__ == "__main__":
+
     youtube = get_youtube_service()
-    print("YouTube authentication successful")
+
+    video = get_next_video()
+
+    if video:
+
+        title = f"{CHANNEL_NAME} Football Short"
+
+        description = f"""
+Amazing football moments by {CHANNEL_NAME}
+
+{HASHTAGS}
+"""
+
+        upload_video(
+            youtube,
+            video,
+            title,
+            description
+        )
+
+        save_uploaded(
+            os.path.basename(video)
+        )
+
+        print("Upload completed successfully")
+
+    else:
+        print("No new videos found")
