@@ -31,6 +31,12 @@ def save_uploaded(video_name):
             return os.path.join(video_folder, file)
 
     return None
+
+    for file in os.listdir(video_folder):
+        if file not in uploaded:
+            return os.path.join(video_folder, file)
+
+    return None
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
