@@ -6,14 +6,11 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
-
 load_dotenv()
-
 
 # Load config
 with open("config.json", "r") as file:
     config = json.load(file)
-
 
 CHANNEL_NAME = config["channel_name"]
 VIDEOS_PER_DAY = config["videos_per_day"]
@@ -36,7 +33,6 @@ def save_uploaded(video_name):
 
 # Find next video
 def get_next_video():
-
     uploaded = load_uploaded()
 
     video_folder = "videos"
@@ -44,9 +40,8 @@ def get_next_video():
     if not os.path.exists(video_folder):
         return None
 
-    for file in os.listdir(video_folder):
-
-        if file not in uploaded:
+    for file in sorted(os.listdir(video_folder)):
+        if file.lower().endswith(".mp4") and file not in uploaded:
             return os.path.join(video_folder, file)
 
     return None
@@ -59,7 +54,6 @@ SCOPES = [
 
 
 def get_youtube_service():
-
     token_json = os.getenv("YOUTUBE_TOKEN_JSON")
 
     if not token_json:
@@ -80,25 +74,17 @@ def get_youtube_service():
     )
 
     return youtube
-      
 
 
 # Upload video
-def upload_video(
-    youtube,
-    file_path,
-    title,
-    description
-):
+def upload_video(youtube, file_path, title, description):
 
     request_body = {
-
         "snippet": {
             "title": title,
             "description": description,
-            "categoryId": "22"
+            "categoryId": "17"
         },
-
         "status": {
             "privacyStatus": "public"
         }
@@ -106,7 +92,7 @@ def upload_video(
 
     media = MediaFileUpload(
         file_path,
-        chunksize=1024 * 1024,
+        chunksize=-1,
         resumable=True
     )
 
@@ -126,10 +112,8 @@ def upload_video(
 
     print("Upload completed!")
     print("Video ID:", response["id"])
-  
 
 
-# Main
 # Main
 if __name__ == "__main__":
 
@@ -139,10 +123,9 @@ if __name__ == "__main__":
 
     if video:
 
-               title = f"{CHANNEL_NAME} Football Short"
+        title = f"{CHANNEL_NAME} Football Short"
 
-        description = f"""
-Amazing football moments by {CHANNEL_NAME}
+        description = f"""Amazing football moments by {CHANNEL_NAME}
 
 {HASHTAGS}
 """
@@ -158,7 +141,7 @@ Amazing football moments by {CHANNEL_NAME}
             os.path.basename(video)
         )
 
-        os.remove(video)
-
-        print(f"Deleted uploaded video: {video}")
         print("Upload completed successfully")
+
+    else:
+        print("No new videos found")
