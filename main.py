@@ -18,6 +18,19 @@ def load_uploaded():
 def save_uploaded(video_name):
     with open("uploaded.txt", "a") as file:
         file.write(video_name + "\n")
+        def get_next_video():
+    uploaded = load_uploaded()
+
+    video_folder = "videos"
+
+    if not os.path.exists(video_folder):
+        return None
+
+    for file in os.listdir(video_folder):
+        if file not in uploaded:
+            return os.path.join(video_folder, file)
+
+    return None
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
