@@ -7,6 +7,17 @@ with open("config.json", "r") as file:
 CHANNEL_NAME = config["channel_name"]
 VIDEOS_PER_DAY = config["videos_per_day"]
 HASHTAGS = " ".join(config["hashtags"])
+def load_uploaded():
+    if not os.path.exists("uploaded.txt"):
+        return []
+
+    with open("uploaded.txt", "r") as file:
+        return file.read().splitlines()
+
+
+def save_uploaded(video_name):
+    with open("uploaded.txt", "a") as file:
+        file.write(video_name + "\n")
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
