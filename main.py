@@ -147,23 +147,21 @@ Amazing football moments by {CHANNEL_NAME}
 {HASHTAGS}
 """
 
-        upload_video(
+                upload_video(
             youtube,
             video,
             title,
             description
         )
-save_uploaded(
-    os.path.basename(video)
-)
 
-print("Upload completed successfully")
+        save_uploaded(
+            os.path.basename(video)
+        )
 
         print("Upload completed successfully")
 
     else:
 
         print("No new videos found")
-
 
    
