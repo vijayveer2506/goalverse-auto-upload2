@@ -47,13 +47,17 @@ jobs:
               "encoded/$filename"
           done
 
-      - name: Replace videos with encoded versions
-        run: |
-          rm -rf videos
-          mv encoded videos
+      - name: Commit updated videos folder
+  run: |
+    git config --global user.name "github-actions"
+    git config --global user.email "github-actions@github.com"
 
-      - name: Run uploader
-        env:
-          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
-        run: |
-          python main.py
+    git add videos
+    git add uploaded.txt
+
+    if git diff --cached --quiet; then
+      echo "No changes to commit."
+    else
+      git commit -m "Remove uploaded video"
+      git push
+    fi
