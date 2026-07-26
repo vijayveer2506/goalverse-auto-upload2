@@ -153,11 +153,11 @@ Amazing football moments by {CHANNEL_NAME}
             title,
             description
         )
+save_uploaded(
+    os.path.basename(video)
+)
 
-        # Delete uploaded video after successful upload
-        os.remove(video)
-
-        print(f"Deleted uploaded video: {video}")
+print("Upload completed successfully")
 
         print("Upload completed successfully")
 
