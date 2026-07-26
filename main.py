@@ -96,7 +96,7 @@ def upload_video(
         "snippet": {
             "title": title,
             "description": description,
-            "categoryId": "17"
+            "categoryId": "22"
         },
 
         "status": {
