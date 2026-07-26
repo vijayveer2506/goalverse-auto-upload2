@@ -41,7 +41,42 @@ def get_youtube_service():
     )
 
     return youtube
+def upload_video(
+    youtube,
+    file_path,
+    title,
+    description
+):
 
+    request_body = {
+        "snippet": {
+            "title": title,
+            "description": description,
+            "categoryId": "17"
+        },
+        "status": {
+            "privacyStatus": "public"
+        }
+    }
+
+    media = MediaFileUpload(
+        file_path,
+        chunksize=-1,
+        resumable=True
+    )
+
+    request = youtube.videos().insert(
+        part="snippet,status",
+        body=request_body,
+        media_body=media
+    )
+
+    response = request.execute()
+
+    print(
+        "Uploaded video ID:",
+        response["id"]
+    )
 
 if __name__ == "__main__":
     youtube = get_youtube_service()
