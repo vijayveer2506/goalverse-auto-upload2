@@ -11,14 +11,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install FFmpeg
         run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Re-encode videos
+        run: |
+          mkdir -p encoded
+          for file in videos/*.mp4; do
+            filename=$(basename "$file")
+            ffmpeg -y -i "$file" \
+              -c:v libx264 \
+              -preset medium \
+              -crf 23 \
+              -pix_fmt yuv420p \
+              -movflags +faststart \
+              -c:a aac \
+              -b:a 128k \
+              "encoded/$filename"
+          done
+
+      - name: Replace videos with encoded versions
+        run: |
+          rm -rf videos
+          mv encoded videos
 
       - name: Run uploader
         env:
