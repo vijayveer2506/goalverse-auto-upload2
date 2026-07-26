@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     if video:
 
-        title = f"{CHANNEL_NAME} Football Short"
+               title = f"{CHANNEL_NAME} Football Short"
 
         description = f"""
 Amazing football moments by {CHANNEL_NAME}
@@ -147,7 +147,7 @@ Amazing football moments by {CHANNEL_NAME}
 {HASHTAGS}
 """
 
-                upload_video(
+        upload_video(
             youtube,
             video,
             title,
@@ -158,10 +158,7 @@ Amazing football moments by {CHANNEL_NAME}
             os.path.basename(video)
         )
 
+        os.remove(video)
+
+        print(f"Deleted uploaded video: {video}")
         print("Upload completed successfully")
-
-    else:
-
-        print("No new videos found")
-
-   
