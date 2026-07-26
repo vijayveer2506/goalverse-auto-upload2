@@ -2,9 +2,9 @@ name: GoalVerse Upload
 
 on:
   schedule:
-    - cron: "0 6 * * *"
-    - cron: "0 12 * * *"
-    - cron: "0 18 * * *"
+    - cron: "0 10 * * *"   # 3:30 PM IST
+    - cron: "0 15 * * *"   # 8:30 PM IST
+    - cron: "0 20 * * *"   # 1:30 AM IST (next day)
 
   workflow_dispatch:
 
