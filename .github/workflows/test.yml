@@ -2,9 +2,9 @@ name: GoalVerse Upload
 
 on:
   schedule:
-    - cron: "0 10 * * *"   # 3:30 PM IST
-    - cron: "0 15 * * *"   # 8:30 PM IST
-    - cron: "0 20 * * *"   # 1:30 AM IST (next day)
+    - cron: "0 10 * * *"
+    - cron: "0 15 * * *"
+    - cron: "0 20 * * *"
 
   workflow_dispatch:
 
@@ -12,11 +12,14 @@ jobs:
   upload-video:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -34,8 +37,18 @@ jobs:
       - name: Re-encode videos
         run: |
           mkdir -p encoded
-          for file in videos/*.mp4; do
+
+          shopt -s nullglob
+          files=(videos/*.mp4)
+
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No MP4 files found."
+            exit 1
+          fi
+
+          for file in "${files[@]}"; do
             filename=$(basename "$file")
+
             ffmpeg -y -i "$file" \
               -c:v libx264 \
               -preset medium \
@@ -47,17 +60,28 @@ jobs:
               "encoded/$filename"
           done
 
-      - name: Commit updated videos folder
-  run: |
-    git config --global user.name "github-actions"
-    git config --global user.email "github-actions@github.com"
+      - name: Replace original videos
+        run: |
+          rm -rf videos
+          mv encoded videos
 
-    git add videos
-    git add uploaded.txt
+      - name: Run uploader
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+        run: |
+          python main.py
 
-    if git diff --cached --quiet; then
-      echo "No changes to commit."
-    else
-      git commit -m "Remove uploaded video"
-      git push
-    fi
+      - name: Commit updated repository
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          git add videos
+          git add uploaded.txt
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Remove uploaded video after upload"
+            git push
+          fi
