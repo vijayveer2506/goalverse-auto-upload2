@@ -4,7 +4,14 @@ on:
   workflow_dispatch:
 
   schedule:
-    - cron: "0 */8 * * *"
+    # 12:00 PM Eastern Time (approx.)
+    - cron: "0 16 * * *"
+
+    # 5:00 PM Eastern Time (approx.)
+    - cron: "0 21 * * *"
+
+    # 9:00 PM Eastern Time (approx.)
+    - cron: "0 1 * * *"
 
 jobs:
   upload:
@@ -27,9 +34,16 @@ jobs:
           pip install -r requirements.txt
 
       - name: Create OAuth Files
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_OAUTH_JSON: ${{ secrets.YOUTUBE_OAUTH_JSON }}
         run: |
-          echo '${{ secrets.YOUTUBE_TOKEN_JSON }}' > token.json
-          echo '${{ secrets.YOUTUBE_OAUTH_JSON }}' > oauth.json
+          echo "$YOUTUBE_TOKEN_JSON" > token.json
+          echo "$YOUTUBE_OAUTH_JSON" > oauth.json
 
       - name: Run GoalVerse
-        run: python main.py
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_OAUTH_JSON: ${{ secrets.YOUTUBE_OAUTH_JSON }}
+        run: |
+          python main.py
