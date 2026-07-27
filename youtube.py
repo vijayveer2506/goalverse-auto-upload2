@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 
 from google.oauth2.credentials import Credentials
@@ -16,22 +17,32 @@ def get_youtube():
 
     token_json = os.getenv("YOUTUBE_TOKEN_JSON")
 
+    oauth_json = os.getenv("YOUTUBE_OAUTH_JSON")
+
     if not token_json:
         raise Exception("Missing YOUTUBE_TOKEN_JSON secret")
 
+    if not oauth_json:
+        raise Exception("Missing YOUTUBE_OAUTH_JSON secret")
+
     with open("token.json", "w", encoding="utf-8") as file:
         file.write(token_json)
+
+    with open("oauth.json", "w", encoding="utf-8") as file:
+        file.write(oauth_json)
 
     credentials = Credentials.from_authorized_user_file(
         "token.json",
         SCOPES
     )
 
-    return build(
+    youtube = build(
         "youtube",
         "v3",
         credentials=credentials
     )
+
+    return youtube
 
 
 def upload_video(
@@ -48,7 +59,8 @@ def upload_video(
             "categoryId": "17"
         },
         "status": {
-            "privacyStatus": "public"
+            "privacyStatus": "public",
+            "selfDeclaredMadeForKids": False
         }
     }
 
@@ -70,11 +82,8 @@ def upload_video(
         status, response = request.next_chunk()
 
         if status:
-            print(
-                f"Uploading... {int(status.progress()*100)}%"
-            )
+            print(f"Uploading... {int(status.progress()*100)}%")
 
-    print()
     print("=" * 50)
     print("UPLOAD SUCCESSFUL")
     print("=" * 50)
