@@ -2,16 +2,29 @@ import json
 import os
 
 from generator import generate_title, generate_description
-from utils import get_next_video, save_uploaded
+
 from youtube import get_youtube, upload_video
+
+from dropbox_client import (
+    download_first_video,
+    move_to_uploaded,
+    move_to_failed
+)
 
 
 def load_config():
-    with open("config.json", "r", encoding="utf-8") as file:
+
+    with open(
+        "config.json",
+        "r",
+        encoding="utf-8"
+    ) as file:
+
         return json.load(file)
 
 
 def print_banner():
+
     print("=" * 60)
     print("         GoalVerse Auto Upload System")
     print("=" * 60)
@@ -23,37 +36,96 @@ def main():
 
     config = load_config()
 
-    channel_name = config.get("channel_name", "GoalVerse")
+    channel_name = config.get(
+        "channel_name",
+        "GoalVerse"
+    )
 
-    video = get_next_video()
+    video = download_first_video()
 
     if video is None:
-        print("❌ No videos available for upload.")
+
+        print("❌ No videos found in Dropbox.")
+
         return
 
-    print(f"🎥 Video : {os.path.basename(video)}")
+    local_path = video["local_path"]
+
+    dropbox_path = video["dropbox_path"]
+
+    filename = video["filename"]
+
+    print(f"🎥 Video : {filename}")
 
     title = generate_title(channel_name)
 
     description = generate_description(channel_name)
 
-    print("\nGenerated Title:")
+    print()
+
+    print("Generated Title:")
+
     print(title)
 
     youtube = get_youtube()
 
-    upload_video(
-        youtube=youtube,
-        video_path=video,
-        title=title,
-        description=description
-    )
+    try:
 
-    save_uploaded(os.path.basename(video))
+        upload_video(
 
-    print("\n✅ Upload completed successfully.")
+            youtube=youtube,
+
+            video_path=local_path,
+
+            title=title,
+
+            description=description
+
+        )
+
+        move_to_uploaded(
+
+            dropbox_path,
+
+            filename
+
+        )
+
+        print()
+
+        print("✅ Video moved to Uploaded folder.")
+
+    except Exception as error:
+
+        print()
+
+        print(error)
+
+        move_to_failed(
+
+            dropbox_path,
+
+            filename
+
+        )
+
+        print("❌ Video moved to Failed folder.")
+
+    finally:
+
+        if os.path.exists(local_path):
+
+            os.remove(local_path)
+
+            print("🗑 Temporary file deleted.")
+
+    print()
+
+    print("Upload process completed.")
+
     print("=" * 60)
 
 
 if __name__ == "__main__":
+
     main()
