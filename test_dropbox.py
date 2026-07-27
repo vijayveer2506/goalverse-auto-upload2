@@ -1,15 +1,16 @@
-from dropbox_client import list_videos
+from dropbox_client import download_first_video
 
-videos = list_videos()
+video = download_first_video()
 
-print("=" * 50)
+if video is None:
 
-if not videos:
-    print("No videos found in Dropbox.")
+    print("No videos found.")
+
 else:
-    print(f"Found {len(videos)} video(s):\n")
 
-    for video in videos:
-        print(video.name)
-
-print("=" * 50)
+    print("=" * 50)
+    print("DOWNLOAD SUCCESSFUL")
+    print("=" * 50)
+    print("Local File :", video["local_path"])
+    print("Dropbox File :", video["dropbox_path"])
+    print("=" * 50)
