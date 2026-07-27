@@ -63,3 +63,11 @@ def move_to_uploaded(dropbox_path, filename):
         dropbox_path,
         destination
     )
+def move_to_failed(dropbox_path, filename):
+
+    destination = f"/GoalVerse/Failed/{filename}"
+
+    dbx.files_move_v2(
+        dropbox_path,
+        destination
+    )
