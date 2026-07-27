@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
 
   schedule:
-    # 09:00 AM IST
-    - cron: "30 3 * * *"
+    # 6:30 PM IST
+    - cron: "13 00 * * *"
 
-    # 03:00 PM IST
-    - cron: "30 9 * * *"
+    # 10:30 PM IST
+    - cron: "17 00 * * *"
 
-    # 09:00 PM IST
-    - cron: "30 15 * * *"
+    # 2:30 AM IST
+    - cron: "21 00 * * *"
 
 jobs:
   upload:
