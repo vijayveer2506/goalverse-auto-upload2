@@ -1,1 +1,102 @@
-
+FIFA World Cup
+UEFA Champions League
+UEFA Europa League
+UEFA Conference League
+UEFA Super Cup
+UEFA Euro
+Copa America
+CONCACAF Gold Cup
+Africa Cup of Nations
+AFC Asian Cup
+FIFA Club World Cup
+Premier League
+La Liga
+Serie A
+Bundesliga
+Ligue 1
+Major League Soccer
+Saudi Pro League
+Eredivisie
+Primeira Liga
+Belgian Pro League
+Scottish Premiership
+Turkish Super Lig
+Brasileirao Serie A
+Argentine Primera Division
+FA Cup
+EFL Cup
+Community Shield
+Copa del Rey
+Supercopa de Espana
+Coppa Italia
+DFB Pokal
+Coupe de France
+Trophee des Champions
+KNVB Cup
+UEFA Nations League
+Olympic Football Tournament
+FIFA U-20 World Cup
+FIFA U-17 World Cup
+UEFA Youth League
+Champions League Final
+Europa League Final
+Conference League Final
+World Cup Final
+Euro Final
+Copa America Final
+FA Cup Final
+League Cup Final
+Super Cup Final
+Derby Match
+El Clasico
+Manchester Derby
+North London Derby
+Merseyside Derby
+Milan Derby
+Rome Derby
+Old Firm Derby
+Le Classique
+Super Sunday
+Top Four Clash
+Title Decider
+Relegation Battle
+Knockout Stage
+Group Stage
+Round of 16
+Quarter Final
+Semi Final
+Final
+Penalty Shootout
+Extra Time Thriller
+International Friendly
+World Cup Qualifier
+Euro Qualifier
+Champions League Night
+Premier League Weekend
+La Liga Clash
+Serie A Showdown
+Bundesliga Battle
+Ligue 1 Matchday
+MLS Cup
+Club Friendly
+Preseason Tour
+Charity Match
+International Break
+Cup Clash
+League Clash
+Title Race
+Golden Boot Race
+Championship Match
+Playoff Final
+Promotion Playoff
+Relegation Playoff
+Season Opener
+Season Finale
+Football Classic
+Historic Match
+Legendary Final
+Big European Night
+Continental Clash
+National Cup
+International Tournament
+Football Showcase
