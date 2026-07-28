@@ -1,12 +1,19 @@
 import os
 import dropbox
 
-ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
+APP_KEY = os.getenv("DROPBOX_APP_KEY")
+APP_SECRET = os.getenv("DROPBOX_APP_SECRET")
+REFRESH_TOKEN = os.getenv("DROPBOX_REFRESH_TOKEN")
 
-dbx = dropbox.Dropbox(ACCESS_TOKEN)
+dbx = dropbox.Dropbox(
+    oauth2_refresh_token=REFRESH_TOKEN,
+    app_key=APP_KEY,
+    app_secret=APP_SECRET
+)
 
 READY_FOLDER = "/GoalVerse/Ready"
 UPLOADED_FOLDER = "/GoalVerse/Uploaded"
+FAILED_FOLDER = "/GoalVerse/Failed"
 
 
 def list_videos():
@@ -63,9 +70,11 @@ def move_to_uploaded(dropbox_path, filename):
         dropbox_path,
         destination
     )
+
+
 def move_to_failed(dropbox_path, filename):
 
-    destination = f"/GoalVerse/Failed/{filename}"
+    destination = f"{FAILED_FOLDER}/{filename}"
 
     dbx.files_move_v2(
         dropbox_path,
