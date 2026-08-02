@@ -2,8 +2,8 @@ import json
 import os
 
 from generator import generate_title, generate_description
-
 from youtube import get_youtube, upload_video
+from audio_processor import process_video
 
 from dropbox_client import (
     download_first_video,
@@ -57,6 +57,12 @@ def main():
 
     print(f"🎥 Video : {filename}")
 
+    print("🎵 Processing video...")
+
+    processed_path = process_video(local_path)
+
+    print("✅ Audio replaced successfully.")
+
     title = generate_title(channel_name)
 
     description = generate_description(channel_name)
@@ -75,7 +81,7 @@ def main():
 
             youtube=youtube,
 
-            video_path=local_path,
+            video_path=processed_path,
 
             title=title,
 
@@ -113,11 +119,13 @@ def main():
 
     finally:
 
-        if os.path.exists(local_path):
+        for path in [local_path, processed_path]:
 
-            os.remove(local_path)
+            if os.path.exists(path):
 
-            print("🗑 Temporary file deleted.")
+                os.remove(path)
+
+                print(f"🗑 Deleted: {path}")
 
     print()
 
